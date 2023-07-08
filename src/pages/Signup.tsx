@@ -51,7 +51,7 @@ export default function Signup() {
         uid: auth.currentUser?.uid,
         displayName: user.displayName,
         email: user.email,
-        avatar: photoURL,
+        avatar: photoURL || "",
       });
 
       navigate("/");
