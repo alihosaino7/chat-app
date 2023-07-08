@@ -2,11 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { LuImagePlus } from "react-icons/lu";
 import { Link, useNavigate } from "react-router-dom";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db, storage } from "./firebase";
+import { auth, db, storage } from "../config/firebase";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import Alert from "./components/Alert";
-import LoadingLayer from "./components/LoadingOverlay";
+import { Alert } from "../components/Alert";
+import { LoadingOverlay } from "../components/LoadingOverlay";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -68,7 +68,7 @@ export default function Signup() {
   return (
     <div className="w-full bg-[#333] h-screen flex items-center justify-center px-4">
       <div className="bg-white rounded-lg w-full sm:w-[400px] py-4 sm:py-6 px-4 sm:px-12 relative">
-        {loading && <LoadingLayer />}
+        {loading && <LoadingOverlay />}
         <input
           type="file"
           ref={fileInputRef}

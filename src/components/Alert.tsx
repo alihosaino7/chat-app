@@ -1,11 +1,12 @@
 import { FiAlertCircle } from "react-icons/fi";
+
 type AlertProps = {
   text: string;
   txtColor?: string;
   bgColor?: string;
 };
 
-const Alert = ({
+export const Alert = ({
   text,
   txtColor = "text-red-400",
   bgColor = "bg-red-100",
@@ -21,5 +22,3 @@ const Alert = ({
     </div>
   );
 };
-
-export default Alert;

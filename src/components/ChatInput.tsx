@@ -1,12 +1,12 @@
 import { useRef, useState, useEffect } from "react";
 import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "./firebase";
+import { db } from "../config/firebase";
 import { nanoid } from "nanoid";
-import { Author } from "./Chat";
+import { IAuthor } from "../pages/Chat";
 
 type ChatInputProps = {
   roomName: string;
-  author: Author;
+  author: IAuthor;
 };
 
 export function ChatInput({ roomName, author }: ChatInputProps) {
@@ -65,12 +65,12 @@ export function ChatInput({ roomName, author }: ChatInputProps) {
   }
 
   return (
-    <div className="flex border-t border-[#ccc] w-full">
+    <div className="mt-auto flex border-t border-[#ccc] w-full">
       <input
         onChange={(e) => setMessage(e.target.value)}
         type="text"
         placeholder="Type a message..."
-        className="flex-1 px-4 outline-0 py-3"
+        className="flex-1 px-4 outline-0 py-2 sm:py-3"
         ref={inputMsgRef}
         value={message}
       />

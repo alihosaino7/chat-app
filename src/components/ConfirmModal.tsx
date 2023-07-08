@@ -10,10 +10,10 @@ export const ConfirmModal = ({
   onClose,
 }: ConfirmModalProps) => {
   return createPortal(
-    <div className="bg-[rgba(0,0,0,0.3)] fixed w-full h-screen flex items-center justify-center z-[1000]">
+    <div className="bg-[rgba(0,0,0,0.3)] fixed w-full h-screen flex px-4 items-center justify-center z-[1000]">
       <div className="bg-white z-[2000] rounded-lg overflow-hidden">
-        <div className="p-8">
-          <h2 className="text-xl font-semibold">
+        <div className="p-6 sm:p-8">
+          <h2 className="text-lg sm:text-xl text-center font-semibold">
             Are you sure you want logout?
           </h2>
         </div>

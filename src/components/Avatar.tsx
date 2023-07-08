@@ -3,7 +3,7 @@ type AvatarProps = {
   className: string;
 };
 
-const Avatar = ({ img, className }: AvatarProps) => {
+export const Avatar = ({ img, className }: AvatarProps) => {
   return (
     <div className={`rounded-full overflow-hidden ${className}`}>
       <img
@@ -14,5 +14,3 @@ const Avatar = ({ img, className }: AvatarProps) => {
     </div>
   );
 };
-
-export default Avatar;

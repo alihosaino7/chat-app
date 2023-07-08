@@ -1,9 +1,9 @@
 import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { db } from "./firebase";
-import Alert from "./components/Alert";
-import { useAuth } from "./AuthProvider";
+import { db } from "../config/firebase";
+import { Alert } from "../components/Alert";
+import { useAuth } from "../AuthProvider";
 
 const NOT_ALLOWED_CHARS = Array.from(" #%&+?=/\\\"'<>|");
 type Validation = { isValidName: boolean; disallowedChars: string[] };
@@ -24,15 +24,6 @@ const ChatEntery = () => {
     return { isValidName: disallowedChars.length === 0, disallowedChars };
   }, [room]);
 
-  useEffect(() => {
-    if (
-      error.startsWith("The following characters are not allowed:") &&
-      validation.isValidName
-    ) {
-      setError("");
-    }
-  }, [error, validation.isValidName]);
-
   async function checkIsRoomExist() {
     const result = (await getDoc(doc(db, "rooms", room))).exists()
       ? true
@@ -41,12 +32,13 @@ const ChatEntery = () => {
   }
 
   async function joinRoom() {
+    if (room === "") return setError("Field can't be empty");
     const isRoomExist = await checkIsRoomExist();
-    if (!room) return;
     if (!isRoomExist) {
-      setError("Room not exist");
-      return;
+      return setError("Room not exist");
     }
+
+    setError("");
 
     navigate(`/chat/room/${room}`);
   }
@@ -54,14 +46,12 @@ const ChatEntery = () => {
   async function createRoom() {
     if (!room) return;
 
-    // let isInvalidInput = true;
     let finalErrMsg = "";
 
     if (!validation.isValidName) {
       finalErrMsg = `The following characters are not allowed: ${validation.disallowedChars.join(
         ", "
       )}`;
-      // isInvalidInput = false;
     }
 
     if (!validation.isValidName) {
@@ -79,8 +69,7 @@ const ChatEntery = () => {
     navigate(`/chat/room/${room}`);
   }
   return (
-    <div className="h-screen w-full justify-center flex items-center bg-[#333]">
-      {" "}
+    <div className="h-full w-full justify-center flex items-center">
       <div className="w-[400px]">
         <h2 className="text-white w-full border-b-2 pb-4 mb-4 border-white text-2xl text-center">
           Welcome to <span className="font-semibold">ChatterNet</span>
@@ -105,7 +94,7 @@ const ChatEntery = () => {
           onClick={createRoom}
           className="text-white font-semibold bg-blue-500 hover:bg-blue-600 w-full block py-3 rounded-sm"
         >
-          Create one
+          Create room
         </button>
       </div>
     </div>

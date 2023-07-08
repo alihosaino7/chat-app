@@ -46,16 +46,13 @@ body {
 .users-explorer::-webkit-scrollbar {
   width: 8px;
 }
-.users-explorer::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  @apply bg-navy-blue;
-}
 
 .custom-scrollbar::-webkit-scrollbar {
   width: 8px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 4px;
   @apply bg-[#ccc] rounded-md;
 }
 

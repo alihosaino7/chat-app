@@ -1,9 +1,10 @@
-import { Author, Message } from "./Chat";
+import { IAuthor, IMessage } from "../pages/Chat";
 
 type MessagesListProps = {
-  author: Author;
-  messages: Message[];
+  author: IAuthor;
+  messages: IMessage[];
 };
+
 export function MessagesList({ author, messages }: MessagesListProps) {
   if (messages.length === 0) {
     return (
@@ -40,7 +41,9 @@ export function MessagesList({ author, messages }: MessagesListProps) {
         return (
           <div
             key={message.id}
-            className={`flex gap-2 items-center ${msgMargin}`}
+            className={`flex gap-2 items-center ${
+              isOwner ? "flex-row" : "flex-row-reverse"
+            } ${msgMargin}`}
           >
             <div
               className={`px-3 py-1 rounded-lg ${

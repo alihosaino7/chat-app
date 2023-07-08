@@ -9,6 +9,9 @@ export default {
       xl: "1200px",
       "2xl": "1400px",
     },
+    container: {
+      padding: "1rem",
+    },
     extend: {
       backgroundColor: {
         "navy-blue": "#05445E",
