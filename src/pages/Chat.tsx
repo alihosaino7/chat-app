@@ -8,7 +8,7 @@ import {
 import { auth, db } from "../config/firebase";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAuth } from "../AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 import { LoadingOverlay } from "../components/LoadingOverlay";
 import { Sidebar } from "../components/Sidebar";
 import { ChatInput } from "../components/ChatInput";

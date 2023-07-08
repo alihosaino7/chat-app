@@ -3,7 +3,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../config/firebase";
 import { Alert } from "../components/Alert";
-import { useAuth } from "../AuthProvider";
+import { useAuth } from "../context/AuthProvider";
 
 const NOT_ALLOWED_CHARS = Array.from(" #%&+?=/\\\"'<>|");
 type Validation = { isValidName: boolean; disallowedChars: string[] };
