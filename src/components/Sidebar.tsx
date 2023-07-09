@@ -1,14 +1,13 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
-import { IRoom } from "../pages/Chat";
 import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { RoomItem } from "./RoomItem";
 
 type SidebarProps = {
-  rooms: IRoom[];
+  rooms: string[];
 };
 
 export function Sidebar({ rooms }: SidebarProps) {
@@ -17,17 +16,10 @@ export function Sidebar({ rooms }: SidebarProps) {
   const [loading, setLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredRooms = useMemo(
-    () =>
-      rooms.filter(
-        (room) =>
-          room.roomName.toLocaleLowerCase() ===
-            searchQuery.toLocaleLowerCase() ||
-          room.roomName
-            .toLocaleLowerCase()
-            .startsWith(searchQuery.toLocaleLowerCase())
-      ),
-    [rooms, searchQuery]
+  const filteredRooms = rooms.filter(
+    (room) =>
+      room.toLocaleLowerCase() === searchQuery.toLocaleLowerCase() ||
+      room.toLocaleLowerCase().startsWith(searchQuery.toLocaleLowerCase())
   );
 
   async function deleteRoom(roomName: string) {
@@ -35,7 +27,7 @@ export function Sidebar({ rooms }: SidebarProps) {
     await deleteDoc(doc(db, "rooms", roomName));
     await getDocs(collection(db, "rooms")).then((roomsSnapshot) => {
       if (roomsSnapshot.size > 0) {
-        const firstRoom = roomsSnapshot.docs[0].data() as IRoom;
+        const firstRoom = roomsSnapshot.docs[0].data() as any;
         navigate(`/chat/room/${firstRoom.roomName}`);
       } else {
         navigate("/");
@@ -56,7 +48,7 @@ export function Sidebar({ rooms }: SidebarProps) {
         {loading && <LoadingOverlay />}
 
         {filteredRooms?.map((room) => {
-          const urlMatch = location.pathname == `/chat/room/${room.roomName}`;
+          const urlMatch = location.pathname == `/chat/room/${room}`;
           return (
             <RoomItem
               key={nanoid()}

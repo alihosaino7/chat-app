@@ -1,14 +1,12 @@
 import { createPortal } from "react-dom";
+import { useAuth } from "../context/AuthProvider";
 
 type ConfirmModalProps = {
   actionCallback: () => Promise<void>;
-  onClose: () => void;
 };
 
-export const ConfirmModal = ({
-  actionCallback,
-  onClose,
-}: ConfirmModalProps) => {
+export const ConfirmModal = ({ actionCallback }: ConfirmModalProps) => {
+  const { closeConfirmModal } = useAuth();
   return createPortal(
     <div className="bg-[rgba(0,0,0,0.3)] fixed w-full h-screen flex px-4 items-center justify-center z-[1000]">
       <div className="bg-white z-[2000] rounded-lg overflow-hidden">
@@ -20,14 +18,14 @@ export const ConfirmModal = ({
         <div>
           <button
             onClick={() => {
-              actionCallback().then(() => onClose());
+              actionCallback().then(closeConfirmModal);
             }}
             className="border-[#ccc] border-y py-4 font-semibold text-red-400 w-full block text-center hover:bg-gray-200"
           >
             Yes
           </button>
           <button
-            onClick={onClose}
+            onClick={closeConfirmModal}
             className="py-4 w-full block text-center hover:bg-gray-200"
           >
             Cancel

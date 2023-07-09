@@ -7,6 +7,7 @@ import { collection, doc, setDoc } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Alert } from "../components/Alert";
 import { LoadingOverlay } from "../components/LoadingOverlay";
+import { useAuth } from "../context/AuthProvider";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ export default function Signup() {
     password: "",
   });
 
+  const { loginWithGoogle } = useAuth();
+
   const [file, setFile] = useState<File | null>(null);
   const storageRef = ref(storage, `/avatars/${file?.name}`);
 
@@ -31,6 +34,7 @@ export default function Signup() {
 
   async function handleSignup() {
     const { displayName, email, password } = user;
+
     if (!(displayName && email && password)) {
       return setError("All fields are required");
     }
@@ -42,6 +46,7 @@ export default function Signup() {
         user.email,
         user.password
       );
+
       localStorage.setItem("isAuth", result.user.refreshToken);
 
       const uploadTask = await uploadBytes(storageRef, file as File);
@@ -118,6 +123,19 @@ export default function Signup() {
           onClick={handleSignup}
         >
           Sign In
+        </button>
+        <div className="w-full text-center my-2">OR</div>
+        <button
+          onClick={loginWithGoogle}
+          className="bg-white px-4 py-2 border justify-center w-full flex gap-2 border-slate-200 rounded-lg text-slate-700 hover:border-slate-400 hover:text-slate-900 hover:shadow transition duration-150"
+        >
+          <img
+            className="w-6 h-6"
+            src="https://www.svgrepo.com/show/475656/google-color.svg"
+            loading="lazy"
+            alt="google logo"
+          />
+          <span>Login with Google</span>
         </button>
         <p className="my-4 text-center">
           You do have an account?{" "}

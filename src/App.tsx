@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { Suspense, lazy } from "react";
 import { Spinner } from "./components/Spinner";
@@ -18,10 +18,10 @@ const LoadingPage = () => {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <>
       <Suspense fallback={<LoadingPage />}>
         <div className="w-full h-screen flex items-center justify-center bg-[#333]">
-          <div className="container mx-auto">
+          <div className="container">
             <Routes>
               <Route element={<PrivateRoute />}>
                 <Route path="/" index element={<ChatEntery />} />
@@ -33,6 +33,6 @@ export default function App() {
           </div>
         </div>
       </Suspense>
-    </BrowserRouter>
+    </>
   );
 }

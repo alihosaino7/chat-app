@@ -1,9 +1,20 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { useState, useMemo } from "react";
+import {
+  addDoc,
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../config/firebase";
 import { Alert } from "../components/Alert";
 import { useAuth } from "../context/AuthProvider";
+import { IAuthor } from "./Chat";
 
 const NOT_ALLOWED_CHARS = Array.from(" #%&+?=/\\\"'<>|");
 type Validation = { isValidName: boolean; disallowedChars: string[] };
@@ -13,6 +24,15 @@ const ChatEntery = () => {
   const [error, setError] = useState("");
   const [room, setRoom] = useState("");
   const { currentUser } = useAuth();
+  const [author, setAuthor] = useState<IAuthor>({} as IAuthor);
+
+  useEffect(() => {
+    if (currentUser) {
+      getDoc(doc(db, "users", currentUser.uid)).then((authorSnapshot) => {
+        setAuthor(authorSnapshot.data() as IAuthor);
+      });
+    }
+  }, [currentUser]);
 
   const validation: Validation = useMemo(() => {
     const disallowedChars = [];
@@ -25,10 +45,11 @@ const ChatEntery = () => {
   }, [room]);
 
   async function checkIsRoomExist() {
-    const result = (await getDoc(doc(db, "rooms", room))).exists()
-      ? true
-      : false;
-    return result;
+    const roomsInMessages = await getDocs(
+      query(collection(db, "messages"), where("room", "==", room))
+    );
+
+    return !roomsInMessages.empty ? true : false;
   }
 
   async function joinRoom() {
@@ -44,7 +65,7 @@ const ChatEntery = () => {
   }
 
   async function createRoom() {
-    if (!room) return;
+    if (!room || !author) return;
 
     let finalErrMsg = "";
 
@@ -58,12 +79,11 @@ const ChatEntery = () => {
       return setError(finalErrMsg);
     }
 
-    await setDoc(doc(db, "rooms", room), {
-      roomName: room,
-      messages: [],
-      admin: {
-        uid: currentUser.uid,
-      },
+    await addDoc(collection(db, "messages"), {
+      room,
+      messageText: `Hello I'm ${author.displayName}`,
+      createdAt: serverTimestamp(),
+      author,
     });
 
     navigate(`/chat/room/${room}`);

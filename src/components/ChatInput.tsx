@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect } from "react";
-import { arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { nanoid } from "nanoid";
 import { IAuthor } from "../pages/Chat";
 
 type ChatInputProps = {
@@ -33,34 +32,13 @@ export function ChatInput({ roomName, author }: ChatInputProps) {
   }, [message]);
 
   function sendMessage() {
-    const id = nanoid();
+    if (!message) return;
     setMessage("");
-    getDoc(doc(db, "rooms", roomName)).then((roomDocSnapshot) => {
-      if (roomDocSnapshot.exists()) {
-        updateDoc(doc(db, "rooms", roomName), {
-          messages: arrayUnion({
-            author: {
-              displayName: author?.displayName,
-              avatar: author?.avatar,
-            },
-            messageText: message,
-            id,
-          }),
-        });
-      } else {
-        setDoc(doc(db, "rooms", roomName), {
-          messages: [
-            {
-              author: {
-                displayName: author?.displayName,
-                avatar: author?.avatar,
-              },
-              messageText: message,
-              id,
-            },
-          ],
-        });
-      }
+    addDoc(collection(db, "messages"), {
+      messageText: message,
+      room: roomName,
+      createdAt: serverTimestamp(),
+      author,
     });
   }
 

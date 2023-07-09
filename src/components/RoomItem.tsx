@@ -6,7 +6,7 @@ import { useAuth } from "../context/AuthProvider";
 type RoomItemProps = {
   isUrlMatch: boolean;
   onDelete(roomName: string): void;
-  room: IRoom;
+  room: string;
 };
 export function RoomItem({ isUrlMatch, onDelete, room }: RoomItemProps) {
   const { currentUser } = useAuth();
@@ -18,21 +18,21 @@ export function RoomItem({ isUrlMatch, onDelete, room }: RoomItemProps) {
       }`}
       onClick={() => {
         if (!isUrlMatch) {
-          navigate(`/chat/room/${room.roomName}`);
+          navigate(`/chat/room/${room}`);
         }
       }}
     >
       <p className="w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
-        room: <span className="font-bold">{room.roomName}</span>
+        room: <span className="font-bold">{room}</span>
       </p>
-      {room.admin.uid === currentUser.uid && (
+      {/* {room.admin.uid === currentUser.uid && (
         <button
-          onClick={() => onDelete(room.roomName)}
+          onClick={() => onDelete(room)}
           className="text-lg text-gray-500 hover:text-[#333]"
         >
           <RiDeleteBin6Line />
         </button>
-      )}
+      )} */}
     </div>
   );
 }
