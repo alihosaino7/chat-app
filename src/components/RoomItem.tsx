@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { IRoom } from "../pages/Chat";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { useAuth } from "../context/AuthProvider";
 
 type RoomItemProps = {

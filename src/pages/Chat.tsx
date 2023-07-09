@@ -55,6 +55,7 @@ export default function Chat() {
   }
 
   function fetchMessages() {
+    setLoading(true);
     getDocs(query(messagesRef, orderBy("createdAt"))).then(
       (messagesSnapshot) => {
         setMessages(
@@ -63,6 +64,7 @@ export default function Chat() {
             id: doc.id,
           })) as IMessage[]
         );
+        setLoading(false);
       }
     );
   }

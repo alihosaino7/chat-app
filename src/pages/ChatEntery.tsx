@@ -6,7 +6,6 @@ import {
   getDocs,
   query,
   serverTimestamp,
-  setDoc,
   where,
 } from "firebase/firestore";
 import { useState, useMemo, useEffect } from "react";
