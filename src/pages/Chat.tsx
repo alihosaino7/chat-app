@@ -120,7 +120,9 @@ export default function Chat() {
                 className={`absolute sm:static z-[100] duration-[500ms] h-[300px] sm:h-[100%] bg-white top-0 sm:basis-1/3`}
                 style={{ left: showSidebar ? "0%" : "-100%" }}
               >
-                {rooms && <Sidebar rooms={Array.from(rooms)} />}
+                {rooms && author && (
+                  <Sidebar author={author} rooms={Array.from(rooms)} />
+                )}
               </div>
               <div className="w-full sm:basis-2/3 flex-col flex">
                 <main className="p-4 h-[300px] sm:h-[400px] overflow-y-auto custom-scrollbar relative">

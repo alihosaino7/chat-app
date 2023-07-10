@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { nanoid } from "nanoid";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { LoadingOverlay } from "./LoadingOverlay";
 import { RoomItem } from "./RoomItem";
+import { IAuthor } from "../pages/Chat";
 
 type SidebarProps = {
   rooms: string[];
+  author: IAuthor;
 };
 
-export function Sidebar({ rooms }: SidebarProps) {
+export function Sidebar({ author, rooms }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -24,16 +26,22 @@ export function Sidebar({ rooms }: SidebarProps) {
 
   async function deleteRoom(roomName: string) {
     setLoading(true);
-    await deleteDoc(doc(db, "rooms", roomName));
-    await getDocs(collection(db, "rooms")).then((roomsSnapshot) => {
-      if (roomsSnapshot.size > 0) {
-        const firstRoom = roomsSnapshot.docs[0].data() as any;
-        navigate(`/chat/room/${firstRoom.roomName}`);
-      } else {
-        navigate("/");
+    const messages = await getDocs(collection(db, "messages"));
+    const firstRoom = messages.docs.filter(
+      (doc) => doc.data().room !== roomName
+    )[0];
+    messages.forEach(async (doc) => {
+      if (doc.data().room === roomName) {
+        await deleteDoc(doc.ref);
       }
     });
     setLoading(false);
+
+    if (firstRoom) {
+      navigate(`/chat/room/${firstRoom}`);
+    } else {
+      navigate(`/`);
+    }
   }
 
   return (
@@ -51,6 +59,7 @@ export function Sidebar({ rooms }: SidebarProps) {
           const urlMatch = location.pathname == `/chat/room/${room}`;
           return (
             <RoomItem
+              author={author}
               key={nanoid()}
               isUrlMatch={urlMatch}
               onDelete={deleteRoom}
