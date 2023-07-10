@@ -54,9 +54,8 @@ export default function Chat() {
     });
   }
 
-  function fetchMessages() {
-    setLoading(true);
-    getDocs(query(messagesRef, orderBy("createdAt"))).then(
+  function fetchMessages(): Promise<void> {
+    return getDocs(query(messagesRef, orderBy("createdAt"))).then(
       (messagesSnapshot) => {
         setMessages(
           messagesSnapshot.docs.map((doc) => ({
@@ -64,7 +63,6 @@ export default function Chat() {
             id: doc.id,
           })) as IMessage[]
         );
-        setLoading(false);
       }
     );
   }
@@ -95,7 +93,10 @@ export default function Chat() {
 
   useEffect(() => {
     if (roomName && author) {
-      fetchMessages();
+      setLoading(true);
+      fetchMessages().then(() => {
+        setLoading(false);
+      });
     }
   }, [roomName, author]);
 
